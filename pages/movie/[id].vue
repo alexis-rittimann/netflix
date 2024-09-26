@@ -22,15 +22,16 @@
       </div>
     </div>
     
-    <div v-else>
-      <p class="text-center text-gray-500">Chargement des détails du film...</p>
-    </div>
+    <MovieCast />
+    <!-- Intégration du composant CommentSection -->
+    <CommentSection />
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
+import CommentSection from '~/components/CommentSection.vue'; // Import du composant
 
 const route = useRoute();
 const movie = ref(null);
@@ -52,3 +53,4 @@ const fetchMovieDetails = async () => {
 
 onMounted(fetchMovieDetails);
 </script>
+

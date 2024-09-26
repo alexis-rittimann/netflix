@@ -1,8 +1,8 @@
 <template>
   <div class="container mx-auto py-8">
     <h1 class="text-4xl font-bold mb-8 text-center text-white">Films Populaires</h1>
-
-
+    <!-- Composant de recherche -->
+    <MovieSearch />
     <div v-if="movies.length" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
       <NuxtLink 
         v-for="movie in movies" 
@@ -28,21 +28,33 @@
         </div>
       </NuxtLink>
     </div>
-    
+
     <div v-else>
       <p class="text-center text-gray-500">Chargement des films...</p>
+    </div>
+
+    <!-- Loader affiché pendant le chargement des films -->
+    <div v-if="loading" class="text-center mt-4 text-white">
+      Chargement des films...
     </div>
   </div>
 </template>
 
-
-
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, onBeforeUnmount } from 'vue';
 
+// Variables d'état
 const movies = ref([]);
+const page = ref(1);
+const loading = ref(false);
+const hasMore = ref(true);
 
+// Fonction pour récupérer les films
 const fetchMovies = async () => {
+  if (loading.value || !hasMore.value) return; // Empêche les appels répétés si déjà en cours ou s'il n'y a plus de films
+
+  loading.value = true;
+  
   try {
     const config = useRuntimeConfig();
     const response = await $fetch('https://api.themoviedb.org/3/movie/popular', {
@@ -52,14 +64,41 @@ const fetchMovies = async () => {
       },
       params: {
         language: 'fr-FR',
-        page: 1,
+        page: page.value,
       },
     });
-    movies.value = response.results;
+
+    if (response.results.length > 0) {
+      movies.value = [...movies.value, ...response.results]; // Ajoute les nouveaux films à la liste existante
+      page.value += 1; // Incrémente la page pour la prochaine requête
+    } else {
+      hasMore.value = false; // Si aucun résultat, cela signifie qu'il n'y a plus de pages
+    }
   } catch (error) {
     console.error('Erreur lors de la récupération des films :', error);
+  } finally {
+    loading.value = false;
   }
 };
 
-onMounted(fetchMovies);
+// Fonction de gestion du défilement
+const handleScroll = () => {
+  // Vérifie si l'utilisateur est proche du bas de la page
+  const bottomOfWindow = window.innerHeight + window.scrollY >= document.documentElement.offsetHeight - 100;
+  
+  if (bottomOfWindow) {
+    fetchMovies(); // Charge plus de films si l'utilisateur atteint le bas de la page
+  }
+};
+
+// Charge les films initiaux au montage du composant et ajoute l'écouteur de défilement
+onMounted(() => {
+  fetchMovies();
+  window.addEventListener('scroll', handleScroll);
+});
+
+// Retire l'écouteur de défilement lorsque le composant est démonté
+onBeforeUnmount(() => {
+  window.removeEventListener('scroll', handleScroll);
+});
 </script>
