@@ -1,21 +1,26 @@
 <template>
     <div class="mt-8">
       <h2 class="text-2xl font-bold text-white mb-4">Distribution</h2>
-      <div v-if="cast.length" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
-        <div v-for="actor in cast" :key="actor.cast_id" class="bg-gray-800 rounded-md overflow-hidden shadow-lg">
-          <img 
-            :src="actor.profile_path ? 'https://image.tmdb.org/t/p/w500' + actor.profile_path : '/default-profile.png'" 
-            alt="Photo de l'acteur" 
-            class="w-full h-40 object-cover"
-          />
-          <div class="p-2 text-center">
-            <h3 class="text-white text-sm font-bold">{{ actor.name }}</h3>
-            <p class="text-gray-300 text-xs">Rôle : {{ actor.character }}</p>
+      <div class="overflow-x-auto">
+        <div class="flex space-x-4">
+          <div 
+            v-for="actor in cast" 
+            :key="actor.cast_id" 
+            class="flex-shrink-0 flex items-center  p-4 rounded-md w-80"
+          >
+            <!-- Image de l'acteur en forme ronde -->
+            <img 
+              :src="actor.profile_path ? 'https://image.tmdb.org/t/p/w200' + actor.profile_path : '/default-profile.png'" 
+              alt="Photo de l'acteur" 
+              class="w-16 h-16 rounded-full object-cover mr-4"
+            />
+            <!-- Nom de l'acteur et son rôle -->
+            <div class="text-left">
+              <h3 class="text-white font-bold text-sm">{{ actor.name }}</h3>
+              <p class="text-gray-400 text-xs">{{ actor.character }}</p>
+            </div>
           </div>
         </div>
-      </div>
-      <div v-else>
-        <p class="text-gray-500">Aucun acteur trouvé pour ce film.</p>
       </div>
     </div>
   </template>
@@ -45,4 +50,15 @@
   
   onMounted(fetchMovieCast);
   </script>
+  
+  <style scoped>
+  /* Style de l'overflow pour permettre un défilement */
+  .overflow-x-auto {
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+  .flex-shrink-0 {
+    min-width: 200px;
+  }
+  </style>
   

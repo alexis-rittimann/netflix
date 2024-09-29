@@ -2,7 +2,7 @@
     <div class="mt-8">
       <!-- Formulaire de commentaire -->
       <h2 class="text-2xl font-bold text-white mb-4">Laisser un commentaire</h2>
-      <form @submit.prevent="submitComment" class="bg-gray-800 p-4 rounded-md">
+      <form @submit.prevent="submitComment" class=" p-4 rounded-md">
         <div class="mb-4">
           <label class="block text-white mb-1">Nom d'utilisateur :</label>
           <input v-model="username" type="text" class="w-full p-2 rounded bg-gray-700 text-white" required minlength="3" maxlength="50" />
