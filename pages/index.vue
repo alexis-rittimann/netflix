@@ -15,7 +15,7 @@
       <div class="absolute inset-0 bg-black bg-opacity-50"></div>
 
       <!-- Contenu des informations du film lors du hover -->
-      <div v-if="hoveredMovie" class="relative z-10 p-8 w-full md:w-1/2 lg:w-1/3 text-left ml-8 mt-32">
+      <div v-if="hoveredMovie" class="relative z-10 p-8 w-full md:w-1/2 lg:w-1/3 text-left ml-24 mt-32">
         <h1 class="text-4xl font-bold mb-4">{{ hoveredMovie.title }}</h1>
         <p class="mb-4 text-gray-300">{{ hoveredMovie.overview }}</p>
 
